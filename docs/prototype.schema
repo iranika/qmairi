@@ -1,0 +1,36 @@
+// Schema for a simple URL shortener
+// This schema tracks short links by associating them to a user
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["dataproxy"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Person {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  rip       DateTime @default(now())
+  name      String
+  title     String
+  comments    String[]
+  butudan   Butudan 
+  counter   Shards[]
+}
+
+model Butudan {
+  senkou      DateTime[]
+  osonae      Int[]
+  flowers     Int[]
+}
+
+model Shards {
+    one     Int
+    Twe     Int
+    Three   Int
+}
