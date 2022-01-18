@@ -21,7 +21,7 @@
         <div class="text-h6">線香</div>
       </q-card-section>
       <q-card-section>
-        TODO:ここに線香のシステム組む
+        <kouro />
       </q-card-section>
       <q-card-section>
         <div class="text-h6">メッセージ</div>
@@ -62,10 +62,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { usePersonStore, Person } from 'src/stores/PersonStore';
+import { usePersonStore } from 'src/stores/PersonStore';
 import { date } from 'quasar';
 //import Footer from 'src/components/Footer.vue';
-
+import Kouro from 'components/Kouro.vue';
 
 interface DiffYearDays{
   year: number;
@@ -73,15 +73,16 @@ interface DiffYearDays{
 }
 
 const text = [
-  "ふと思い出してしまうのはどうしてでしょうか。悲しくて堪らなくて、もう2度と聞けないと思っていたあなたの声を集め直しました。やはり、悲しくて最後まで聞けませんでした。こんなにも素敵なものを生み出してくれてありがとうございます。受け入れられない私をどうか許してください。",
-  "ふと思い出してしまうのはどうしてでしょうか。悲しくて堪らなくて、もう2度と聞けないと思っていたあなたの声を集め直しました。やはり、悲しくて最後まで聞けませんでした。こんなにも素敵なものを生み出してくれてありがとうございます。受け入れられない私をどうか許してください。",
-  "ふと思い出してしまうのはどうしてでしょうか。悲しくて堪らなくて、もう2度と聞けないと思っていたあなたの声を集め直しました。やはり、悲しくて最後まで聞けませんでした。こんなにも素敵なものを生み出してくれてありがとうございます。受け入れられない私をどうか許してください。",
+  'ふと思い出してしまうのはどうしてでしょうか。悲しくて堪らなくて、もう2度と聞けないと思っていたあなたの声を集め直しました。やはり、悲しくて最後まで聞けませんでした。こんなにも素敵なものを生み出してくれてありがとうございます。受け入れられない私をどうか許してください。',
+  'ふと思い出してしまうのはどうしてでしょうか。悲しくて堪らなくて、もう2度と聞けないと思っていたあなたの声を集め直しました。やはり、悲しくて最後まで聞けませんでした。こんなにも素敵なものを生み出してくれてありがとうございます。受け入れられない私をどうか許してください。',
+  'ふと思い出してしまうのはどうしてでしょうか。悲しくて堪らなくて、もう2度と聞けないと思っていたあなたの声を集め直しました。やはり、悲しくて最後まで聞けませんでした。こんなにも素敵なものを生み出してくれてありがとうございます。受け入れられない私をどうか許してください。',
 ]
 
 export default defineComponent({
   // name: 'PageName'
   components:{
-//    Footer
+//  Footer
+    Kouro
   },
   props:{
     name: String
@@ -91,14 +92,18 @@ export default defineComponent({
     const person = persons[0];
     const today = new Date();
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     function getUruDaysDelta(start: Date, end: Date){
       //TODO: うるう年の追加分の日数を計算する
       return 2
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     function nextHoyoDays(rip: Date){
       //TODO: 次の法要までの日数を計算する
       return 76
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     function nextHoyoDate(rip: Date){
       //TODO: 
       return new Date('2022-04-01')
