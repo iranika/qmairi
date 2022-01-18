@@ -10,8 +10,8 @@
         </template>
         -->
         <template v-for="s in useKouroStore().db.senkou" :key="s">
-          <line :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2" :stroke="s.color" stroke-width="6" />
-          <line :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y1 - 20" stroke="orange" stroke-width="7" />
+          <line :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2" :stroke="s.color" stroke-width="2" />
+          <line :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y1 - 20" stroke="orange" stroke-width="3" />
         </template>
       </svg>
     </div>
