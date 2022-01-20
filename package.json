@@ -9,6 +9,7 @@
     "lint": "eslint --ext .js,.ts,.vue ./",
     "test": "echo \"No test specified\" && exit 0",
     "deploy": "gh-pages -d dist/spa",
+    "start": "quasar dev",
     "bd": "quasar build && yarn deploy"
   },
   "dependencies": {
