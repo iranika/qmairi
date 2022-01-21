@@ -13,7 +13,7 @@
         <div>{{ date.formatDate(person.born, "YYYY年MM月DD日") }}に誕生、{{ date.formatDate(person.rip, "YYYY年MM月DD日") }}に亡くなりました。</div>
         <div>次の法要は{{ nextHoyoDays(person.rip) }}日後、{{ date.formatDate(nextHoyoDate(person.rip), "YYYY年MM月DD日") }}です。</div>
         <div>今日は{{ nextHoyoDays(person.rip) }}人が訪れました。</div>
-        <div>1週:{{ 11 }}人 1ヶ月:{{ 70 }}人 1年:が訪れました。</div>
+        <div>先週:{{ 11 }}人 先月:{{ 70 }}人 今年:{{ 300 }}人が訪れました。</div>
       </q-card-section>
     </q-card>
     <q-card flat class="profile-box">
@@ -95,27 +95,68 @@ export default defineComponent({
     const today = new Date();
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+    function getMonth(dt: Date){
+      //getMonthは0~11を返すので！！！(# ﾟДﾟ)
+      return dt.getMonth()+1
+    }
     function getUruDaysDelta(start: Date, end: Date){
       //TODO: うるう年の追加分の日数を計算する
-      return 2
+      var result = 0;
+
+      /*
+      for (var dt = start; dt <= end; dt.setDate(dt.getDate() + 1)){
+        if (getMonth(dt) == 2 && dt.getDate() == 29){          
+          console.log("date", dt.toString())
+          result++;
+        }
+      }
+      */
+      function isUruYear(year: number){
+        return year % 4 == 0 && !(year % 100 == 0) 
+      }
+      
+      for (var year = start.getFullYear(); year <= end.getFullYear(); year++){
+        if (year == start.getFullYear()){
+          if (getMonth(start) <= 2 && isUruYear(year)){
+            result++;
+          }
+        }else if(year == end.getFullYear()){
+          if (getMonth(start) > 2 && isUruYear(year)){
+            result++;
+          }
+        }else{
+          if (isUruYear(year)){
+            result++;
+          }
+        }
+      }      
+      return result;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    /* 次回の法要までの日数を算出 */
     function nextHoyoDays(rip: Date){
-      //TODO: 次の法要までの日数を計算する
-      return 76
+      const today = new Date();
+      const hoyoDate = nextHoyoDate(rip)
+      date.getDateDiff(hoyoDate, today)
+      return date.getDateDiff(hoyoDate, today)
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    /* 次回の法要日を算出 */
     function nextHoyoDate(rip: Date){
-      //TODO: 
-      return new Date('2022-04-01')
+      const today = new Date();
+      var hoyoDate = new Date(`${today.getFullYear()}-${getMonth(rip)}-${rip.getDate()}`)
+      console.log(hoyoDate, today.getMonth())
+      if (today > hoyoDate){
+        hoyoDate.setFullYear(hoyoDate.getFullYear() + 1)
+      }
+      return hoyoDate;
     }
 
     function getYearDaysDiff(today: Date, rip: Date): DiffYearDays{
       const delta = date.getDateDiff(today, rip)
       const years = ~~(delta / 365);
       const uruDays = getUruDaysDelta(rip, today)
-      const days = (delta % 365) - uruDays;
+      const days = ((delta - uruDays) % 365);
       return {
         year: years,
         days: days
