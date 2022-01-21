@@ -32,3 +32,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 src/firebase/cred.ts
+yarn.lock
