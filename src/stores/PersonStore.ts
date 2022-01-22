@@ -11,7 +11,7 @@ export interface Person {
     rip: Date;
 }
 
-interface DiffYearDays{
+export interface DiffYearDays{
     year: number;
     days: number;
 }
@@ -51,30 +51,32 @@ export class PersonStore {
     public getUruDaysDelta(start: Date, end: Date){
         let result = 0;
         function isUruYear(year: number){
-          return year % 4 == 0 && !(year % 100 == 0) 
+            return year % 4 == 0 && !(year % 100 == 0) 
         }
         
-        for (let year = start.getFullYear(); year <= end.getFullYear(); year++){
-          if (year == start.getFullYear()){
-            if (this.getMonth(start) <= 2 && isUruYear(year)){
-              result++;
+        for (let year = start.getFullYear(); year <= end.getFullYear(); year++) {
+            if (year == start.getFullYear()) {
+                if (isUruYear(year) && this.getMonth(start) <= 2) {
+                    result++;
+                }
+            } else if (year == end.getFullYear()) {
+                if (isUruYear(year) &&
+                    (this.getMonth(end) > 2 || this.getMonth(end) == 2 && end.getDate() == 29)
+                ) {
+                    result++;
+                }
+            } else {
+                if (isUruYear(year)) {
+                    result++;
+                }
             }
-          }else if(year == end.getFullYear()){
-            if (this.getMonth(start) > 2 && isUruYear(year)){
-              result++;
-            }
-          }else{
-            if (isUruYear(year)){
-              result++;
-            }
-          }
-        }      
+        }
         return result;
     }
 
     /* 次回の法要までの日数を算出 */
     public nextHoyoDays(rip: Date, today= new Date()){
-        const hoyoDate = this.nextHoyoDate(rip)
+        const hoyoDate = this.nextHoyoDate(rip, today)
         date.getDateDiff(hoyoDate, today)
         return date.getDateDiff(hoyoDate, today)
     }
@@ -97,6 +99,7 @@ export class PersonStore {
             days: days
         }
     }
+    /* 現在の年齢を取得する */
     public getNowAge(born: Date, today = new Date()){
         const delta = date.getDateDiff(today, born)
         const uruDays = this.getUruDaysDelta(born, today); 

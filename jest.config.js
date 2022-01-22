@@ -32,7 +32,6 @@ module.exports = {
   coveragePathIgnorePatterns: [
     '/node_modules/',
     '.d.ts$',
-    'src/components/**/'
   ],
   coverageThreshold: {
     global: {
