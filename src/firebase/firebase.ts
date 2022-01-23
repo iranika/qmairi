@@ -10,6 +10,6 @@ export const credentials: FirebaseOptions = cred;
 //console.log(credentials.config);
 const firebase = initializeApp(credentials);
 
+export const firestore = getFirestore(firebase);
 export const firestoreSimple = new FirestoreSimple(getFirestore(firebase))
-
 export default firebase;

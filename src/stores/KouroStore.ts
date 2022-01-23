@@ -1,6 +1,8 @@
 import {reactive} from 'vue';
+import { Person } from './PersonStore';
 //import axios from 'axios';
-
+import { collection, doc, getDoc, getDocs, query } from 'firebase/firestore';
+import { firestoreSimple, firestore } from '../firebase/firebase';
 
 export interface Senkou {
     x1: number,
@@ -11,15 +13,9 @@ export interface Senkou {
     putDate: Date
 }
 
-export interface Kouro {
-    name: string;
-    kana: string;
-    title: string;
-    age: number;
-    born: Date;
-    rip: Date;
+export interface Kouro extends Senkou {
+    id: string
 }
-
 
 const mocSenkou = <Senkou>{
     x1:500,
@@ -107,20 +103,38 @@ export class KouroStore {
             })            
         }, fpm)
     }
+    public async syncKouroWithFirebase(id:string){
+        //person idが一致したところのkouroを
+        console.log("id",id)
+        /*
+        const senkous = await firestoreSimple.collection<Kouro>({
+            path: `/mairi/v1/person/${person.id}/kouro`,
+        }).fetchAll();
+        */
+        /*
+        const kouroRef = doc(firestore, 'mairi', "/v1/person/${person.id}/kouro`.split('/')??[""]) );
+        const snap = await getDoc(kouroRef)
+        */
+        const q = query(collection(firestore, `/mairi/v1/person/${id}/kouro`))
+        const docs = await getDocs(q);
+        console.log(docs);
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    private constructor(){}
+    private constructor(id: string){
+        void this.syncKouroWithFirebase(id);
+    }
 
-    public static get getInstance():KouroStore{
+    public static getInstance(id: string):KouroStore{
         if (!this.instance){
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            this.instance = new KouroStore();
+            this.instance = new KouroStore(id);
             this.instance.startUpdateKouro();
         }
         return this.instance;
     }
 }
 
-export function useKouroStore():KouroStore{
-    return KouroStore.getInstance
+export function useKouroStore(id: string):KouroStore{
+    return KouroStore.getInstance(id)
 }

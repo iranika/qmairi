@@ -9,14 +9,14 @@
           <line :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y1 - 20" stroke="orange" stroke-width="7" />
         </template>
         -->
-        <template v-for="s in useKouroStore().db.senkou" :key="s">
+        <template v-for="s in kouro.db.senkou" :key="s">
           <line :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2" :stroke="s.color" stroke-width="2" />
           <line :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y1 - 20" stroke="orange" stroke-width="3" />
         </template>
       </svg>
     </div>
-    <button @click="useKouroStore().addSenkou()">線香を上げる</button>
-    <div>線香:{{ useKouroStore().db.senkou.length }}</div>
+    <button @click="kouro.addSenkou()">線香を上げる</button>
+    <div>線香:{{ kouro.db.senkou.length }}</div>
   </div>
 </template>
 
@@ -38,10 +38,18 @@ const colors = [
 
 export default defineComponent({
   // name: 'ComponentName'
-  setup(){
+  props:{
+    personid: {
+      type: String,
+      required: true,
+    }
+  }
+  ,
+  setup(props){
     const color = ref(colors[0]);
+    const kouro = useKouroStore(props.personid)
     return {
-      useKouroStore,
+      kouro,
       colors,
       color
     }

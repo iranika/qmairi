@@ -21,7 +21,7 @@
         <div class="text-h6">線香</div>
       </q-card-section>
       <q-card-section>
-        <kouro />
+        <kouro :personid="person.id"/>
       </q-card-section>
       <q-card-section>
         <!-- TODO: 200文字以内に限定する -->
