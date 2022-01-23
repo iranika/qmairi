@@ -1,7 +1,7 @@
 import {reactive} from 'vue';
 import { Person } from './PersonStore';
 //import axios from 'axios';
-import { collection, doc, getDoc, getDocs, query } from 'firebase/firestore';
+import { collection, getDocs, query, Timestamp } from 'firebase/firestore';
 import { firestoreSimple, firestore } from '../firebase/firebase';
 
 export interface Senkou {
@@ -88,6 +88,7 @@ export class KouroStore {
         //MEMO: 60秒に1回線香の状態をチェックして燃焼時間(30分)を超過したらsenkouから削除する
         //TODO: 1m or 10mに一回、線香を短くする
         //TODO: senkouはfirestoreで共有するが、取得する際は燃焼時間を超過しているものはfetchしないようにする
+        //TODO: putDateと現在時間からsenkouの長さを算出するように変更する(fetchしたデータとの整合性を取るために)
 
         const fpm = 10000;
         function addMinites(dt: Date, minites: number){
@@ -103,38 +104,32 @@ export class KouroStore {
             })            
         }, fpm)
     }
-    public async syncKouroWithFirebase(id:string){
+    public async syncKouroWithFirebase(person: Person){
         //person idが一致したところのkouroを
-        console.log("id",id)
-        /*
-        const senkous = await firestoreSimple.collection<Kouro>({
-            path: `/mairi/v1/person/${person.id}/kouro`,
-        }).fetchAll();
-        */
-        /*
-        const kouroRef = doc(firestore, 'mairi', "/v1/person/${person.id}/kouro`.split('/')??[""]) );
-        const snap = await getDoc(kouroRef)
-        */
-        const q = query(collection(firestore, `/mairi/v1/person/${id}/kouro`))
-        const docs = await getDocs(q);
-        console.log(docs);
+        const q = query(collection(firestore, `/mairi/v1/person/${person.id}/kouro`))
+        const docs = (await getDocs(q)).docs.map(d => d.data()).map(v => {
+            v.putDate = (<Timestamp>v.putDate).toDate();
+            return <Senkou>v;
+        });
+        console.log('syncKouro', person.id, docs);
+        this.db.senkou = docs;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    private constructor(id: string){
-        void this.syncKouroWithFirebase(id);
+    private constructor(person: Person){
+        void this.syncKouroWithFirebase(person);
     }
 
-    public static getInstance(id: string):KouroStore{
+    public static getInstance(person: Person):KouroStore{
         if (!this.instance){
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            this.instance = new KouroStore(id);
+            this.instance = new KouroStore(person);
             this.instance.startUpdateKouro();
         }
         return this.instance;
     }
 }
 
-export function useKouroStore(id: string):KouroStore{
-    return KouroStore.getInstance(id)
+export function useKouroStore(person: Person):KouroStore{
+    return KouroStore.getInstance(person)
 }

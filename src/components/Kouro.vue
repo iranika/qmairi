@@ -29,6 +29,7 @@ svg{
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useKouroStore } from 'src/stores/KouroStore';
+import { Person } from 'src/stores/PersonStore';
 
 const colors = [
   'green',
@@ -39,15 +40,14 @@ const colors = [
 export default defineComponent({
   // name: 'ComponentName'
   props:{
-    personid: {
-      type: String,
+    person: {
+      type: Object,
       required: true,
-    }
-  }
-  ,
+    },
+  },
   setup(props){
     const color = ref(colors[0]);
-    const kouro = useKouroStore(props.personid)
+    const kouro = useKouroStore(<Person>props.person)
     return {
       kouro,
       colors,
