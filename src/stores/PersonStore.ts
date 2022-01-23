@@ -3,6 +3,7 @@ import {reactive} from 'vue';
 import { date } from 'quasar';
 
 export interface Person {
+    id: string,
     name: string;
     kana: string;
     title: string;
@@ -19,18 +20,18 @@ export interface DiffYearDays{
 
 const moc_persons = <Person[]>[
     {
+        id: '餅よもぎ',
         name: '餅よもぎ',
         kana: 'もちよもぎ',
         born: new Date('1985-08-28T00:00:00+09:00'),
-        age: 30,
         title: '同人声優',
         rip: new Date('2016-04-01T00:00:00+09:00'),
     },
     {
+        id: '餅よもぎ2',
         name: '餅よもぎ2',
         kana: 'もちよもぎ',
         born: new Date('1985-08-28T00:00:00+09:00'),
-        age: 30,
         title: '同人声優',
         rip: new Date('2016-04-01T00:00:00+09:00'),
     }

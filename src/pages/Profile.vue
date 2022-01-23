@@ -9,7 +9,7 @@
       </q-card-section>
       <q-card-section>
         <div>{{ `亡くなってから${sinceAfterRip.year}年${sinceAfterRip.days}日が過ぎました。`}}</div>
-        <div>{{ `${person.age }歳で亡くなりました。現在の年齢は${ Profile.getNowAge(person.born) }歳です。`}}</div>
+        <div>{{ `${ Profile.getNowAge(person.born, person.rip) }歳で亡くなりました。現在の年齢は${ Profile.getNowAge(person.born) }歳です。`}}</div>
         <div>{{ `${date.formatDate(person.born, "YYYY年MM月DD日") }に誕生、${ date.formatDate(person.rip, "YYYY年MM月DD日") }に亡くなりました。`}}</div>
         <div>{{ `次の法要は${ Profile.nextHoyoDays(person.rip) }日後、${ date.formatDate(Profile.nextHoyoDate(person.rip), "YYYY年MM月DD日") }です。`}}</div>
         <div>{{ `今日は${ Profile.nextHoyoDays(person.rip) }人が訪れました。` }}</div>

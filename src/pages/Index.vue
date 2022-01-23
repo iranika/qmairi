@@ -22,7 +22,7 @@
         <div class="text-h6">命日の近い著名人</div>
         <ul style="list-style-type: none;">
           <li v-for="p in usePersonStore().db.persons" :key="p">
-            <router-link :to="`/${p.name}`"><a class="text-subtitle1">{{ p.name }}</a></router-link> ({{ p.age }}) {{ date.formatDate(p.rip, 'YYYY.MM.DD') }} <div class="inline text-green">{{ p.title }}</div>
+            <router-link :to="`/${p.name}`"><a class="text-subtitle1">{{ p.name }}</a></router-link> ({{ usePersonStore().getNowAge(p.born) }}) {{ date.formatDate(p.rip, 'YYYY.MM.DD') }} <div class="inline text-green">{{ p.title }}</div>
           </li>
         </ul>
       </q-card-section>
