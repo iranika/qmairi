@@ -16,7 +16,9 @@
       </svg>
     </div>
     <button @click="kouro.addSenkou()">線香を上げる</button>
+    <!--
     <div>線香:{{ kouro.db.senkou.length }}</div>
+    -->
   </div>
 </template>
 

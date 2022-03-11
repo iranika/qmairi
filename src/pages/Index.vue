@@ -3,8 +3,9 @@
     <div>今日は {{ date.formatDate(today,"YYYY年MM月DD日") }} です</div>
     <q-card flat class="infomation">
       <q-card-section>
-        <div>氏名（漢字・ひらがな）で検索できます</div>
-        <input v-model="search" autocomplete="none"><button>検索</button>
+        <div style="text-decoration: line-through;">氏名（漢字・ひらがな）で検索できます</div>
+        <div>現在、検索機能は停止中です。</div>
+        <input v-model="search" autocomplete="none"><button disabled>検索</button>
         <!--
         <q-input outlined/>
         -->

@@ -1,8 +1,9 @@
 import {reactive} from 'vue';
 import { Person } from './PersonStore';
 //import axios from 'axios';
-import { collection, getDocs, query, Timestamp } from 'firebase/firestore';
+import { collection, getDocs, query, Timestamp, where } from 'firebase/firestore';
 import { firestoreSimple, firestore } from '../firebase/firebase';
+import { date } from 'quasar';
 
 export interface Senkou {
     x1: number,
@@ -11,6 +12,11 @@ export interface Senkou {
     y2: number,
     color: string,
     putDate: Date
+}
+
+export interface FISenkou {
+    color: string,
+    putDate: Timestamp    
 }
 
 export interface Kouro extends Senkou {
@@ -38,7 +44,7 @@ export class KouroStore {
     private static instance: KouroStore;
     
     public db = reactive({
-        senkou: <Array<Senkou>>[mocSenkou],
+        senkou: <Array<Senkou>>[],
     })
 
     public senkouIsOdd(){
@@ -81,22 +87,31 @@ export class KouroStore {
 
     public addSenkou(color='green'){
         //TODO: 線香は一日一本まで
+
         this.db.senkou.push(this.getRandomSenkou(color))
+
     }
 
     public startUpdateKouro(){
         //MEMO: 60秒に1回線香の状態をチェックして燃焼時間(30分)を超過したらsenkouから削除する
         //TODO: 1m or 10mに一回、線香を短くする
         //TODO: senkouはfirestoreで共有するが、取得する際は燃焼時間を超過しているものはfetchしないようにする
-        //TODO: putDateと現在時間からsenkouの長さを算出するように変更する(fetchしたデータとの整合性を取るために)
 
-        const fpm = 10000;
+        const fpm = 60000;
         function addMinites(dt: Date, minites: number){
             return new Date(dt.getTime() + minites*fpm)
         }
         setInterval(()=>{
             this.db.senkou = this.db.senkou.filter(v => (new Date()) < addMinites(v.putDate, 30));
             this.db.senkou = this.db.senkou.map(v => {
+                //TODO: putDateと現在時間からsenkouの長さを算出するように変更する(fetchしたデータとの整合性を取るために)
+                const now = new Date();
+                /*
+                    delta = now - putDateの差分を求める(単位は分で秒以下切り捨て)
+                    height = 線香のMAX高さ - deltaを求める
+                */
+                const delta = now.getTime() - v.putDate.getTime();
+                const height = 200 - delta
                 if (v.y1 +10 < v.y2){
                     v.y1 += 10;
                 }
@@ -104,9 +119,9 @@ export class KouroStore {
             })            
         }, fpm)
     }
-    public async syncKouroWithFirebase(person: Person){
+    public async syncKouroWithFirebase(person: Person, today = new Date()){
         //person idが一致したところのkouroを
-        const q = query(collection(firestore, `/mairi/v1/person/${person.id}/kouro`))
+        const q = query(collection(firestore, `/mairi/v1/person/${person.id}/kouro`), where('putDate', '>', Timestamp.fromDate(new Date(today.getTime() - 60000*20))))
         const docs = (await getDocs(q)).docs.map(d => d.data()).map(v => {
             v.putDate = (<Timestamp>v.putDate).toDate();
             return <Senkou>v;

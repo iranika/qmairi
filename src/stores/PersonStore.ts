@@ -27,6 +27,7 @@ const moc_persons = <Person[]>[
         title: '同人声優',
         rip: new Date('2016-04-01T00:00:00+09:00'),
     },
+    /*
     {
         id: '餅よもぎ2',
         name: '餅よもぎ2',
@@ -35,6 +36,7 @@ const moc_persons = <Person[]>[
         title: '同人声優',
         rip: new Date('2016-04-01T00:00:00+09:00'),
     }
+    */
 ]
 
 export class PersonStore {

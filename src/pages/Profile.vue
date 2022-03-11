@@ -12,8 +12,10 @@
         <div>{{ `${ Profile.getNowAge(person.born, person.rip) }歳で亡くなりました。現在の年齢は${ Profile.getNowAge(person.born) }歳です。`}}</div>
         <div>{{ `${date.formatDate(person.born, "YYYY年MM月DD日") }に誕生、${ date.formatDate(person.rip, "YYYY年MM月DD日") }に亡くなりました。`}}</div>
         <div>{{ `次の法要は${ Profile.nextHoyoDays(person.rip) }日後、${ date.formatDate(Profile.nextHoyoDate(person.rip), "YYYY年MM月DD日") }です。`}}</div>
+        <!-- NOTE:一時的に削除
         <div>{{ `今日は${ Profile.nextHoyoDays(person.rip) }人が訪れました。` }}</div>
         <div>先週:{{ 11 }}人 先月:{{ 70 }}人 今年:{{ 300 }}人が訪れました。</div>
+        -->
       </q-card-section>
     </q-card>
     <q-card flat class="profile-box">
@@ -27,9 +29,11 @@
         <!-- TODO: 200文字以内に限定する -->
         <div class="text-h6">メッセージ</div>
         <q-input type="textarea" outlined></q-input>
-        <button>送信</button>
+        <div class="text-caption">※メッセージは送信すると煙の様に消えます。保存はされないのでご注意を。</div>
+        <button @click="submitMessage()">送信</button>
       </q-card-section>
     </q-card>
+    <!--
     <div class="row inline justify-center">
       <q-card v-for="t in text" :key="t" class="message-card">
         <q-card-section>
@@ -37,6 +41,7 @@
         </q-card-section>
       </q-card>
     </div>
+    -->
   </q-page>
 </template>
 
@@ -60,7 +65,7 @@
 </style>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { usePersonStore } from 'src/stores/PersonStore';
 import { date } from 'quasar';
 //import Footer from 'src/components/Footer.vue';
@@ -89,9 +94,19 @@ export default defineComponent({
     const person = persons[0];
     const Profile = usePersonStore()
     const sinceAfterRip = Profile.getYearDaysDiff(new Date(), person.rip)
+    let message = ref('');
+    function submitMessage(){
+      if (message.value.length == 0){
+
+      }else{
+        message.value = ''
+      }
+    }
     return {
+      submitMessage,
       date,
       person,
+      message,
       text,
       Profile,
       sinceAfterRip
