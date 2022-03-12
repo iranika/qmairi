@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <div class="toolbar-title">
-      <q-btn flat to="/" size="lg" outline><div class="text-h5">Miley:Prototype</div></q-btn>
+      <q-btn flat to="/" size="lg" outline><div class="text-h5 underline">Miley:まいりー</div></q-btn>
     </div>
     <q-page-container>
       <router-view />
@@ -18,6 +18,11 @@
 .toolbar-title{
   text-align: center;
   margin: 0 auto;
+}
+
+.underline{
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
 }
 </style>
 
