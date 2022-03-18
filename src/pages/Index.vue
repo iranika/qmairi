@@ -4,7 +4,7 @@
     <q-card flat class="infomation">
       <q-card-section>
         <div style="text-decoration: line-through;">氏名（漢字・ひらがな）で検索できます</div>
-        <div>現在、検索機能は停止中です。</div>
+        <div>現在、検索機能は停止中です</div>
         <input v-model="search" autocomplete="none"><button disabled>検索</button>
         <!--
         <q-input outlined/>
@@ -15,6 +15,7 @@
     <q-card class="infomation" flat>
       <q-card-section>
         <div class="text-h6">おしらせ</div>
+        <div class="q-ma-lg">現在、お知らせはありません</div>
       </q-card-section>
     </q-card>
     <!-- 命日の近い著名人 -->
@@ -50,6 +51,10 @@
 .infomation{
   max-width: 600px;
   margin: 0 auto;
+}
+
+.underline{
+  text-decoration: underline;
 }
 </style>
 
