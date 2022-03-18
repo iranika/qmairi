@@ -27,17 +27,16 @@ const moc_persons = <Person[]>[
         title: '同人声優',
         rip: new Date('2016-04-01T00:00:00+09:00'),
     },
-    /*
     {
-        id: '餅よもぎ2',
-        name: '餅よもぎ2',
-        kana: 'もちよもぎ',
-        born: new Date('1985-08-28T00:00:00+09:00'),
+        id: '愛枝今日子',
+        name: '愛枝今日子',
+        kana: 'あいえだきょうこ',
+        born: null,
         title: '同人声優',
-        rip: new Date('2016-04-01T00:00:00+09:00'),
+        rip: new Date('2022-02-08T00:00:00+09:00'),
     }
-    */
 ]
+
 
 export class PersonStore {
     private static instance: PersonStore;
@@ -103,7 +102,12 @@ export class PersonStore {
         }
     }
     /* 現在の年齢を取得する */
+    /* TODO: bornがnullのケースを考慮する*/
     public getNowAge(born: Date, today = new Date()){
+        if (born == null){
+            console.log('born date is null. geNowAge()')
+            return '--'
+        }
         const delta = date.getDateDiff(today, born)
         const uruDays = this.getUruDaysDelta(born, today); 
         const age = ~~((delta - uruDays) / 365);

@@ -87,9 +87,7 @@ export class KouroStore {
 
     public addSenkou(color='green'){
         //TODO: 線香は一日一本まで
-
         this.db.senkou.push(this.getRandomSenkou(color))
-
     }
 
     public startUpdateKouro(){
@@ -101,19 +99,23 @@ export class KouroStore {
         function addMinites(dt: Date, minites: number){
             return new Date(dt.getTime() + minites*fpm)
         }
+        function getHeightDelta(putDate: Date){
+            /*
+                delta = (now - putDate) / fpm の差分を求める(単位は分で秒以下切り捨て)
+            */
+            const now = new Date();
+            const delta = Math.floor((now.getTime() - putDate.getTime()) / fpm)
+            return delta * 20
+        }
         setInterval(()=>{
             this.db.senkou = this.db.senkou.filter(v => (new Date()) < addMinites(v.putDate, 30));
             this.db.senkou = this.db.senkou.map(v => {
                 //TODO: putDateと現在時間からsenkouの長さを算出するように変更する(fetchしたデータとの整合性を取るために)
                 const now = new Date();
-                /*
-                    delta = now - putDateの差分を求める(単位は分で秒以下切り捨て)
-                    height = 線香のMAX高さ - deltaを求める
-                */
-                const delta = now.getTime() - v.putDate.getTime();
-                const height = 200 - delta
-                if (v.y1 +10 < v.y2){
-                    v.y1 += 10;
+                const delta = getHeightDelta(v.putDate)
+                console.log("delta", delta);
+                if (305 + delta < v.y2){
+                    v.y1 = 305 + delta;
                 }
                 return v
             })            
@@ -124,6 +126,12 @@ export class KouroStore {
         const q = query(collection(firestore, `/mairi/v1/person/${person.id}/kouro`), where('putDate', '>', Timestamp.fromDate(new Date(today.getTime() - 60000*20))))
         const docs = (await getDocs(q)).docs.map(d => d.data()).map(v => {
             v.putDate = (<Timestamp>v.putDate).toDate();
+            const now = new Date();
+            const delta = now.getTime() - (<Date>v.putDate).getTime();
+            const height = 200 - delta;
+            if (delta < 200){
+                v.y1 = delta;
+            }
             return <Senkou>v;
         });
         console.log('syncKouro', person.id, docs);
