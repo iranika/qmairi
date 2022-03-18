@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <div class="toolbar-title">
-      <q-btn flat to="/" size="lg" outline><div class="text-h5 underline">Miley:まいりー</div></q-btn>
+      <q-btn flat to="/" size="lg" outline><div class="text-h5 underline">Miley</div></q-btn>
     </div>
     <q-page-container>
       <router-view />
